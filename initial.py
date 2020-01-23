@@ -44,7 +44,7 @@ def print_grid(height,width,cols,new_cols,grid , lives, coins,shield_mode,score,
                 grid[0][global_var.curr_startcol + 41] = Back.RED + Fore.WHITE + 'I' + Fore.RESET + Style.RESET_ALL
                 grid[0][global_var.curr_startcol + 42] = Back.RED + Fore.WHITE + 'M' + Fore.RESET + Style.RESET_ALL
                 grid[0][global_var.curr_startcol + 43] = Back.RED + Fore.WHITE + 'E' + Fore.RESET + Style.RESET_ALL
-                grid[0][global_var.curr_startcol + 45] = 300 - time
+                grid[0][global_var.curr_startcol + 45] = time
 
 
                 grid[0][global_var.curr_startcol + 59] = Back.RED + Fore.WHITE + 'C' + Fore.RESET + Style.RESET_ALL
@@ -135,9 +135,10 @@ class Initial:
         lives = self.mando.get_lives()
 
         while True:
+            global_var.while_value = 1
 
             global_var.recent_time = time.time()
-            global_var.time_left = round(global_var.recent_time - global_var.overall_time)
+            global_var.time_left = 300 - round(global_var.recent_time - global_var.overall_time)
             self.magnet_obj.put_in_grid(self.magnet_obj.height, self.magnet_obj.width, self.magnet_obj.matrix,self.grid.grid,1)
             
             score = self.mando.get_score()
@@ -155,10 +156,23 @@ class Initial:
                 shield_mode = self.mando.get_shield_mode()
                 coins = self.mando.get_coins()
                 lives = self.mando.get_lives()
-                if lives == 0 or Finish == False:
+                if lives == 0 or Finish == False or global_var.time_left == 0:
                     os.system('clear')
-                    # print("kjhgf")
+                    for i in range(2):
+                        print()
+                    if(Finish == False):
+                        print("Game Quit!")
+                        print()
+                    if(lives == 0):
+                        print("Mando Died!")
+                        print()
+                    if(global_var.time_left == 0):
+                        print("Time Over!")
+                        print()
+                    print("Final Score is: ", score)
+                    print()
                     sys.exit()
+                
 
                 dragon_lives = self.enemy.get_lives()
                 list_of_first_and_last_column = print_grid(self.grid.height,self.grid.width,self.cols,self.new_cols,self.grid.grid,lives,coins,shield_mode,score,dragon_lives,global_var.time_left)
@@ -222,6 +236,7 @@ class Initial:
                         else:
                             self.mando.put_in_mando(self.grid.grid,self.mando.matrix2)
                     if ret_value == 1:
+                        # print("rtyuiougyhjk")
                         self.cols = -2
                         self.new_cols = 150
                         self.grid = Background(self.grid.height, self.grid.width)
@@ -231,7 +246,9 @@ class Initial:
                         self.enemy.put_in_boss_enemy(self.grid.width,self.grid.grid)
                         time.sleep(0.35)
                     if ret_value == 2:
+                        # print("hiiiiiiiiiiii")
                         for i in range(self.grid.height):
+                            # print("hiiiiiiiiiiii")
                             for j in range(global_var.index - 20 , global_var.index + 20 , 1):
                                 if self.grid.grid[i][j] == Back.RED + Fore.BLACK + '*' + Fore.RESET + Style.RESET_ALL:
                                     self.grid.grid[i][j] = ' '
@@ -250,6 +267,7 @@ class Initial:
                         else:
                             self.mando.put_in_mando(self.grid.grid,self.mando.matrix2)
                     if ret_value == 1:
+                        # print("rtyuiougyhjk")
                         self.cols = 0
                         self.new_cols = 150
                         self.grid = Background(self.grid.height, self.grid.width)
@@ -259,7 +277,9 @@ class Initial:
                         self.enemy.put_in_boss_enemy(self.grid.width,self.grid.grid)
                         time.sleep(0.35)
                     if ret_value == 2:
+                        # print("hiiiiiiiiiiii")
                         for i in range(self.grid.height):
+                            # print("hiiiiiiiiiiii")
                             for j in range(global_var.index - 20 , global_var.index + 20 , 1):
                                 if self.grid.grid[i][j] == Back.RED + Fore.BLACK + '*' + Fore.RESET + Style.RESET_ALL:
                                     self.grid.grid[i][j] = ' '
@@ -312,6 +332,7 @@ class Initial:
                             else:
                                 self.mando.put_in_mando(self.grid.grid,self.mando.matrix2)
                         if ret_value == 1:
+                            # print("rtyuiougyhjk")
                             self.cols = 0
                             self.new_cols = 150
                             self.grid = Background(self.grid.height, self.grid.width)
@@ -321,7 +342,9 @@ class Initial:
                             self.enemy.put_in_boss_enemy(self.grid.width,self.grid.grid)
                             time.sleep(0.35)
                         if ret_value == 2:
+                            # print("hiiiiiiiiiiii")
                             for i in range(self.grid.height):
+                                # print("hiiiiiiiiiiii")
                                 for j in range(global_var.index - 20 , global_var.index + 20 , 1):
                                     if self.grid.grid[i][j] == Back.RED + Fore.BLACK + '*' + Fore.RESET + Style.RESET_ALL:
                                         self.grid.grid[i][j] = ' '
@@ -345,7 +368,10 @@ class Initial:
 
 
                 elif x == "q":
-                    quit()
+                    # quit()
+                    # os.system('clear')
+                    # print("Game Quit!")
+                    # print()
                     Finish = False
 
 
@@ -411,8 +437,8 @@ class Initial:
 
                         if start_row <= top_of_enemy:
                             self.enemy.place_space(self.grid.width,self.grid.grid)
-                    
                             self.enemy.modify_top_of_enemy_up()
+
 
                         if start_row == 32 and top_of_enemy < 25:
                             self.enemy.modify_top_of_enemy_down()
@@ -428,6 +454,7 @@ class Initial:
                             else:
                                 self.mando.put_in_mando(self.grid.grid,self.mando.matrix2)
                         if ret_value == 1:
+                            # print("rtyuiougyhjk")
                             self.cols = 0
                             self.new_cols = 150
                             self.grid = Background(self.grid.height, self.grid.width)
@@ -437,7 +464,9 @@ class Initial:
                             self.enemy.put_in_boss_enemy(self.grid.width,self.grid.grid)
                             time.sleep(0.35)
                         if ret_value == 2:
+                            # print("hiiiiiiiiiiii")
                             for i in range(self.grid.height):
+                                # print("hiiiiiiiiiiii")
                                 for j in range(global_var.index - 20 , global_var.index + 20 , 1):
                                     if self.grid.grid[i][j] == Back.RED + Fore.BLACK + '*' + Fore.RESET + Style.RESET_ALL:
                                         self.grid.grid[i][j] = ' '
@@ -450,9 +479,11 @@ class Initial:
         enemy_lives = self.enemy.get_lives()
         Finish = True
 
+
         while True:
+            global_var.while_value = 2
             global_var.recent_time = time.time()
-            global_var.time_left = round(global_var.recent_time - global_var.overall_time)
+            global_var.time_left = 300 - round(global_var.recent_time - global_var.overall_time)
             score = self.mando.get_score()
             self.mando.modify_score()
             start_row = self.mando.get_start_row()
@@ -462,8 +493,24 @@ class Initial:
             coins = self.mando.get_coins()
             lives = self.mando.get_lives()
             dragon_lives = self.enemy.get_lives()
-            if lives == 0 or dragon_lives == 0 or Finish == False:
+            if lives == 0 or dragon_lives == 0 or Finish == False or global_var.time_left == 0:
                 os.system('clear')
+                for i in range(2):
+                        print()
+                if(Finish == False):
+                    print("Game Quit!")
+                    print()
+                if(lives == 0):
+                    print("Mando Died!")
+                    print()
+                if(dragon_lives == 0):
+                    print("Dragon Died!")
+                    print()
+                if(global_var.time_left == 0):
+                    print("Time Over!")
+                    print()
+                print("Final Score is: ", score)
+                print()
                 sys.exit()
             list_of_first_and_last_column = print_grid(self.grid.height,self.grid.width,self.cols,self.new_cols,self.grid.grid,lives,coins,shield_mode,score,dragon_lives,global_var.time_left)
             global_var.curr_startcol = list_of_first_and_last_column[0]
@@ -557,7 +604,7 @@ class Initial:
                         self.enemy.put_in_boss_enemy(self.grid.width,self.grid.grid)
 
                 elif x == "q":
-                    quit()
+                    # quit()
                     Finish = False
 
 

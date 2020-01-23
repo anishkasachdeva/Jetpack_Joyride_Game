@@ -1,5 +1,6 @@
 import time
 
+while_value = 0
 index = 0
 magnet_info = []
 gravity_time = 0

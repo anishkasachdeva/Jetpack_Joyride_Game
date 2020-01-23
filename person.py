@@ -20,11 +20,19 @@ class Person:
         self.__width = width
         self.__dx = dx
         self.__dy = dy
+        self._lives = 3
         self.matrix1 = np.zeros((self.__height,self.__width),dtype='<U20')
         self.matrix1[:] = ' '
 
         self.matrix2 = np.zeros((self.__height,self.__width),dtype='<U20')
         self.matrix2[:] = ' '
+
+    def get_lives(self):
+        return self._lives
+    
+    def modify_lives(self,value):
+        self._lives -= value
+
 
     def get_matrix1(self):
         '''Function to return the matrix
@@ -54,7 +62,7 @@ class Mando(Person):
         self.__dx = 2
         self.__dy = -1
         self.__coins = 0
-        self.__lives = 3
+        # self.__lives = 3
         self.__shield_mode = False
         self.__score = 0
         # self.grid = Background(40,1000)
@@ -125,11 +133,11 @@ class Mando(Person):
     def get_coins(self):
         return self.__coins
 
-    def get_lives(self):
-        return self.__lives
+    # def get_lives(self):
+    #     return self.__lives
     
-    def modify_lives(self,value):
-        self.__lives -= value
+    # def modify_lives(self,value):
+    #     self.__lives -= value
 
     def get_shield_mode(self):
         return self.__shield_mode
@@ -145,23 +153,30 @@ class Mando(Person):
         if self.__start_column <= curr_startcol:
                 self.__start_column = curr_startcol + value
 
+
     def move_right(self,curr_lastcol):
         self.__start_column += self.__dx
         if self.__start_column >= curr_lastcol:
-            self.__start_column = self.__dx
+            self.__start_column -= self.__dx
 
-
+            
     def move_up_change(self):
-        self.__start_row -= self.__dx
-        if self.__start_column + 3 >= global_var.curr_lastcol:
-            self.__start_column = global_var.curr_lastcol - 65 - 4
+        if self.__start_row >= 4:
+            self.__start_row -= self.__dx
         else:
-            self.__start_column += self.__dx
+            self.__start_row = 2
+        # if self.__start_column + 3 >= global_var.curr_lastcol:
+        #     self.__start_column = global_var.curr_lastcol - 65 - 4
+        # else:
+        #     self.__start_column += self.__dx
 
     def move_up(self):
     
         self.__start_row -= self.__dx
-        self.__start_column += self.__dx
+        if self.__start_column + self.__dx >= global_var.curr_lastcol:
+            self.__start_column = global_var.curr_lastcol - 4
+        else:
+            self.__start_column += self.__dx
 
     def check_gravity(self,height,gravity_time,grid):
         distance = round(0.5 * 1 * gravity_time * gravity_time)
@@ -193,7 +208,6 @@ class Mando(Person):
         grid[self.__start_row : self.__start_row + self.__height , self.__start_column : self.__start_column + self.__width] = ' '
 
     def check_collision(self,grid):
-
         index = 0
         exist = 0
         shield_used = 0
@@ -209,29 +223,34 @@ class Mando(Person):
                     # global_var.screen_movement = 0.22
 
                 if self.__shield_mode == False:
-                    if grid[i][j] == Back.RED + Fore.BLACK + '*' + Fore.RESET + Style.RESET_ALL or grid[i][j] ==  '<':
+                    if grid[i][j] == Back.RED + Fore.BLACK + '*' + Fore.RESET + Style.RESET_ALL:
                         exist = 1
                         self.__start_row = 32
                         self.__start_column = 3
-                        self.__lives -= 1
+                        self._lives -= 1
                         if self.__dx == 4:
                             self.__dx = 2
                         break
+                        self.__score += 100
                 if self.__shield_mode == True:
-                    if grid[i][j] == Back.RED + Fore.BLACK + '*' + Fore.RESET + Style.RESET_ALL  or grid[i][j] == Back.RED + Fore.BLACK + '~' + Fore.RESET + Style.RESET_ALL:
+                    # print("dfghjklkjhgfdghjkjhgfdghjklj")
+                    if grid[i][j] == Back.RED + Fore.BLACK + '*' + Fore.RESET + Style.RESET_ALL:
                         shield_used = 1
                         global_var.index = j
                         self.__shield_mode = False
                         break
-
+        
             if exist == 1 or shield_used == 1:
                 break
-        if exist == 0:
+        print(shield_used)
+        if exist == 0 and shield_used == 0:
             return 0
-        if exist == 1:
-            return 1
-        if shield_used == 1:
+        if shield_used == 1 and exist == 0:
+            print("hello")
             return 2
+        if exist == 1 and shield_used == 0:
+            return 1
+        
 
 
     def check_magnet_attraction(self,grid):
@@ -272,7 +291,7 @@ class Enemy(Person):
         self.__width = 54
         self.__top_of_enemy = 25
         self.__bottom_of_enemy = self.__top_of_enemy + self.__height
-        self.__lives = 5
+        # self.__lives = 5
         self.__dx = 2
         self.matrix1 = np.array(
                                 [list("                          __,----'~~~~~~~~~`-----.__  "),
@@ -287,11 +306,11 @@ class Enemy(Person):
                                 list("          /|____)-'\~'______,--''                     ")]
                                 )
 
-    def get_lives(self):
-        return self.__lives
+    # def get_lives(self):
+    #     return self.__lives
     
-    def modify_lives(self,value):
-        self.__lives -= value
+    # def modify_lives(self,value):
+    #     self.__lives -= value
 
     def get_height(self):
         return self.__height
@@ -324,8 +343,8 @@ class Enemy(Person):
     #         grid[self.__top_of_enemy + i : self.__top_of_enemy + i + 1, grid_width - 56 : grid_width - 2] = ' '
 
     def place_space(self,grid_width,grid):
-        for i in range(3,35):
-            for j in range(grid_width - 65,grid_width - 2, 1):
+        for i in range(2,35):
+            for j in range(grid_width - 64,grid_width - 2, 1):
                 grid[i][j] = ' '
 
     def put_in_boss_enemy(self,grid_width,grid):
@@ -355,4 +374,4 @@ class Enemy(Person):
         for i in range(self.__top_of_enemy,self.__height):
             for j in range(grid_width - 56, grid_width - 2):
                 if grid[i][j] == 'o':
-                    self.__lives -= 1
+                    self._lives -= 1

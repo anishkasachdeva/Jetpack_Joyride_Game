@@ -26,4 +26,9 @@ class Background():
         power_booster = np.zeros((1,1),dtype='<U20')
         power_booster[:] = ' '
         self.grid[28:29 , 91:92] = Back.BLUE + Fore.WHITE + 'P' + Fore.RESET + Style.RESET_ALL
-        self.grid[28:29 , 195:196] = Back.BLUE + Fore.WHITE + 'P' + Fore.RESET + Style.RESET_ALL
+        self.grid[24:25 , 195:196] = Back.BLUE + Fore.WHITE + 'P' + Fore.RESET + Style.RESET_ALL
+        self.grid[30:31 , 400:401] = Back.BLUE + Fore.WHITE + 'P' + Fore.RESET + Style.RESET_ALL
+        self.grid[28:29 , 355:356] = Back.BLUE + Fore.WHITE + 'P' + Fore.RESET + Style.RESET_ALL
+        self.grid[28:29 , 450:451] = Back.BLUE + Fore.WHITE + 'P' + Fore.RESET + Style.RESET_ALL
+        self.grid[24:25 , 550:551] = Back.BLUE + Fore.WHITE + 'P' + Fore.RESET + Style.RESET_ALL
+        self.grid[30:31 , 600:601] = Back.BLUE + Fore.WHITE + 'P' + Fore.RESET + Style.RESET_ALL
